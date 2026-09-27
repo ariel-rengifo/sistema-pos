@@ -1,30 +1,14 @@
-﻿# Sistema POS para Negocio Local
+﻿# Demo interactiva — Sistema POS para Negocio Local
 
-Punto de venta para negocios pequeños: **Mini PC como servidor**, el cajero con **laptop o tablet** y el mesero con **tablet o celular**, todo conectado por la red local del negocio. **Sin nube, sin mensualidades.**
+**👉 https://ariel-rengifo.github.io/sistema-pos/**
 
-## Página promocional con demo interactiva
+Página exclusiva de demostración del sistema POS: el visitante registra su nombre y contraseña, elige rol (dueño / administrador / cajero / mesero) y explora las pantallas reales del sistema con datos de muestra:
 
-👉 **https://ariel-rengifo.github.io/sistema-pos/**
+- **Mesero** (vista tablet): mesas de colores → pedido → enviar a caja
+- **Cajero** (vista laptop): notificación de mesa → cobro → ticket simulado → stock descontado → mesa liberada
+- **Administrador** (vista laptop): alta de productos, reposición por lote, creación de personal
+- **Dueño** (vista laptop): dashboard de ventas, top producto, stock bajo, gestión de administradores
 
-La página incluye una **demo interactiva** del sistema: el visitante crea su cuenta, entra como mesero (toma pedidos en mesas desde una vista de tablet) o como cajero (cobra y emite tickets en una vista de laptop), y recorre el flujo real mesa → pedido → cobro → ticket, con datos de muestra.
+Todo corre en el navegador (HTML/CSS/JS puro, sin dependencias). Los pedidos y ventas comparten estado dentro de la sesión: lo que el mesero envía, el cajero lo cobra.
 
-## Características del sistema
-
-- Login con 4 roles y permisos (dueño / administrador / cajero / mesero)
-- Inventario con código de barras y alertas de stock bajo
-- Venta de mostrador con ticket simulado y descuento automático de stock
-- Flujo de pedidos: mesero (tablet) → caja (laptop/tablet) → mesa liberada
-- Multi-dispositivo real por red local
-
-## Stack
-
-Backend: Python + Flask + SQLite · Frontend: HTML/CSS/JS · Demo publicada en GitHub Pages
-
-## Contenido del repo
-
-- `index.html` — página promocional + demo interactiva (HTML puro, sin dependencias)
-- `presentacion.md` — documento de presentación para clientes
-
-## Cómo correr el prototipo real instalado
-
-El prototipo funcional (Flask + SQLite) corre en la Mini PC del negocio siguiendo `iniciar_servidor.bat`; los demás dispositivos entran por navegador a la IP local.
+El sistema real instalado corre con Python + Flask + SQLite en una Mini PC del negocio (mismo flujo, datos reales, impresora y lector físicos).
