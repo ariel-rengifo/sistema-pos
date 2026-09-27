@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema POS para Negocio Local | Ariel Rengifo</title>
-  <meta name="description" content="Prototipo funcional de un sistema de punto de venta para negocios pequeños: laptop, tablet y celular conectados por red local. Sin nube, sin mensualidades.">
+  <meta name="description" content="Sistema de punto de venta para negocios pequeños: Mini PC como servidor, cajero y mesero con laptop, tablet o celular por red local. Sin nube, sin mensualidades.">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -13,6 +13,8 @@
       --gris: #64748b;
       --fondo: #f8fafc;
       --verde: #16a34a;
+      --rojo: #dc2626;
+      --amarillo: #f59e0b;
     }
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -25,11 +27,11 @@
     header {
       background: linear-gradient(135deg, var(--azul-oscuro), var(--azul));
       color: white;
-      padding: 70px 0 60px;
+      padding: 60px 0 50px;
       text-align: center;
     }
-    header h1 { font-size: 2.4rem; margin-bottom: 12px; }
-    header p.sub { font-size: 1.15rem; opacity: .92; max-width: 700px; margin: 0 auto 25px; }
+    header h1 { font-size: 2.3rem; margin-bottom: 12px; }
+    header p.sub { font-size: 1.12rem; opacity: .92; max-width: 700px; margin: 0 auto 25px; }
     .badge-demo {
       display: inline-block;
       background: rgba(255,255,255,.15);
@@ -38,19 +40,26 @@
       border-radius: 20px;
       font-size: .9rem;
     }
+    .btn-hero {
+      display: inline-block; margin-top: 22px;
+      background: white; color: var(--azul-oscuro);
+      text-decoration: none; padding: 14px 36px;
+      border-radius: 8px; font-size: 1.05rem; font-weight: 700;
+      box-shadow: 0 4px 14px rgba(0,0,0,.25);
+      transition: transform .15s;
+      cursor: pointer; border: 0;
+    }
+    .btn-hero:hover { transform: translateY(-2px); }
 
     section { padding: 55px 0; }
-    section h2 { font-size: 1.7rem; margin-bottom: 28px; text-align: center; }
+    section h2 { font-size: 1.65rem; margin-bottom: 28px; text-align: center; }
     section h2 span { color: var(--azul); }
 
     .problema { background: white; }
     .problema ul { max-width: 640px; margin: 0 auto; list-style: none; }
     .problema li { padding: 9px 0 9px 32px; position: relative; border-bottom: 1px dashed #e2e8f0; }
-    .problema li::before { content: "✗"; position: absolute; left: 4px; color: #dc2626; font-weight: bold; }
-    .problema .cierre {
-      text-align: center; margin-top: 22px;
-      font-size: 1.1rem; font-weight: 600; color: #b91c1c;
-    }
+    .problema li::before { content: "✗"; position: absolute; left: 4px; color: var(--rojo); font-weight: bold; }
+    .problema .cierre { text-align: center; margin-top: 22px; font-size: 1.1rem; font-weight: 600; color: #b91c1c; }
 
     .dispositivos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 28px; }
     .dispositivos .card {
@@ -70,27 +79,6 @@
     }
     .feature-card h3 { font-size: 1.05rem; margin-bottom: 6px; }
     .feature-card p { color: #475569; font-size: .95rem; }
-
-    .demo-pass { background: var(--azul-oscuro); color: white; }
-    .demo-pass ol {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 14px; max-width: 950px; margin: 25px auto 0;
-      list-style: none; counter-reset: paso;
-    }
-    .demo-pass li {
-      counter-increment: paso;
-      background: rgba(255,255,255,.1);
-      border-radius: 10px; padding: 40px 14px 18px;
-      font-size: .9rem; position: relative;
-    }
-    .demo-pass li::before {
-      content: counter(paso);
-      position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
-      background: var(--verde); color: white;
-      width: 24px; height: 24px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: .85rem;
-    }
 
     table.comparativa {
       width: 100%; border-collapse: collapse;
@@ -135,11 +123,201 @@
     footer { text-align: center; padding: 28px 0; color: #94a3b8; font-size: .85rem; }
     footer a { color: var(--azul); }
 
+    /* ============ DEMO INTERACTIVA ============ */
+    #demo {
+      background: linear-gradient(180deg, #eef2f7, #e2e8f0);
+    }
+    .demo-aviso {
+      text-align: center; color: var(--gris); font-size: .85rem;
+      margin-bottom: 18px; max-width: 700px; margin-left: auto; margin-right: auto;
+    }
+    .demo-wrap { max-width: 1100px; margin: 0 auto; }
+
+    /* Pantalla de entrada a la demo */
+    .demo-portada { text-align: center; padding: 30px 0 10px; }
+    .demo-portada h3 { font-size: 1.4rem; margin-bottom: 10px; }
+    .demo-portada p { color: var(--gris); max-width: 600px; margin: 0 auto 24px; }
+
+    .registro-box {
+      background: white; border-radius: 14px; padding: 30px;
+      max-width: 440px; margin: 0 auto;
+      box-shadow: 0 8px 30px rgba(30,58,138,.15);
+      text-align: left;
+    }
+    .registro-box label { display: block; font-size: 13px; color: var(--gris); margin: 12px 0 4px; font-weight: 600; }
+    .registro-box input, .registro-box select {
+      width: 100%; padding: 11px 12px; border: 1px solid #cbd5e1;
+      border-radius: 8px; font-size: 15px; background: #fff;
+    }
+    .registro-box .btn-reg {
+      width: 100%; margin-top: 18px; padding: 13px;
+      background: var(--azul); color: white; border: 0;
+      border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer;
+    }
+    .registro-box .btn-reg:hover { background: var(--azul-oscuro); }
+    .demo-hint {
+      margin-top: 14px; font-size: .8rem; color: var(--gris); text-align: center;
+      background: #f1f5f9; border-radius: 8px; padding: 8px 12px;
+    }
+
+    /* Dispositivos de la demo */
+    .escena { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
+    .dispositivo { text-align: center; }
+    .dispositivo .etiqueta {
+      font-size: .8rem; font-weight: 700; color: var(--azul-oscuro);
+      margin-bottom: 10px; letter-spacing: .5px; text-transform: uppercase;
+    }
+
+    /* Marco laptop */
+    .marco-laptop {
+      width: 720px; max-width: 100%;
+      border: 10px solid #1e293b; border-radius: 14px;
+      background: #1e293b; box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .marco-laptop .pantalla {
+      background: #f2f4f8; border-radius: 6px; overflow: hidden; height: 470px;
+    }
+    .marco-base {
+      width: 760px; max-width: 100%; height: 16px;
+      background: linear-gradient(#334155, #1e293b);
+      border-radius: 0 0 12px 12px; margin: 0 auto;
+    }
+
+    /* Marco tablet (vertical) */
+    .marco-tablet {
+      width: 340px;
+      border: 10px solid #1e293b; border-radius: 18px;
+      background: #1e293b; box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .marco-tablet .pantalla {
+      background: #f2f4f8; border-radius: 8px; overflow: hidden; height: 480px;
+    }
+
+    /* Interfaz interna del "sistema" */
+    .app-topbar {
+      background: #1f2937; color: white;
+      padding: 9px 14px; display: flex; align-items: center; gap: 10px;
+      font-size: .85rem;
+    }
+    .app-topbar .app-brand { font-weight: 700; color: #93c5fd; }
+    .app-topbar .app-who { opacity: .8; }
+    .app-topbar .app-salir {
+      margin-left: auto; background: #374151; color: #e5e7eb;
+      border: 0; border-radius: 5px; padding: 4px 10px; cursor: pointer; font-size: .75rem;
+    }
+    .app-body { padding: 14px; overflow-y: auto; height: calc(100% - 41px); }
+    .app-body h4 { font-size: 1rem; margin-bottom: 10px; color: #111827; }
+    .app-body h5 { font-size: .85rem; margin: 14px 0 6px; color: #374151; }
+
+    .app-flash {
+      background: #fef3c7; border: 1px solid var(--amarillo);
+      color: #92400e; padding: 7px 10px; border-radius: 6px;
+      font-size: .78rem; margin-bottom: 10px;
+    }
+    .app-flash.ok { background: #dcfce7; border-color: var(--verde); color: #166534; }
+
+    .mesas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .mesa {
+      border: 0; border-radius: 8px; padding: 16px 6px;
+      font-weight: 700; font-size: .8rem; cursor: pointer;
+      display: flex; flex-direction: column; gap: 3px; align-items: center;
+    }
+    .mesa small { font-weight: 400; font-size: .68rem; }
+    .mesa.libre { background: #dcfce7; color: #14532d; }
+    .mesa.ocupada { background: #fde68a; color: #78350f; }
+    .mesa.enviada { background: #fecaca; color: #7f1d1d; }
+    .mesa:disabled { cursor: not-allowed; opacity: .75; }
+
+    .catalogo { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .prod-btn {
+      background: white; border: 1px solid #dbe2ea; border-radius: 7px;
+      padding: 7px 9px; text-align: left; cursor: pointer; font-size: .75rem;
+    }
+    .prod-btn:hover { border-color: var(--azul); }
+    .prod-btn .precio { color: var(--azul); font-weight: 700; }
+    .prod-btn.sin-stock { opacity: .45; cursor: not-allowed; }
+
+    .pedido-actual { background: white; border-radius: 8px; padding: 10px; border: 1px solid #e2e8f0; }
+    .pedido-linea {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .78rem; padding: 4px 0; border-bottom: 1px dashed #eef1f5;
+    }
+    .btn-min {
+      background: #eef1f5; border: 0; border-radius: 4px;
+      padding: 2px 7px; cursor: pointer; font-size: .7rem;
+    }
+    .btn-enviar {
+      width: 100%; margin-top: 12px; background: var(--verde); color: white;
+      border: 0; border-radius: 8px; padding: 11px; font-weight: 700;
+      cursor: pointer; font-size: .85rem;
+    }
+    .btn-enviar:disabled { background: #cbd5e1; cursor: not-allowed; }
+    .btn-volver { background: transparent; border: 0; color: var(--azul); cursor: pointer; font-size: .78rem; padding: 0; }
+
+    table.app-tabla { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; font-size: .78rem; }
+    table.app-tabla th, table.app-tabla td { padding: 7px 9px; text-align: left; border-bottom: 1px solid #eef1f5; }
+    table.app-tabla th { background: #eef2f7; font-size: .72rem; }
+    .btn-tabla {
+      background: var(--azul); color: white; border: 0; border-radius: 5px;
+      padding: 4px 10px; font-size: .72rem; cursor: pointer;
+    }
+    .btn-tabla.verde { background: var(--verde); }
+
+    .scan-row { display: flex; gap: 6px; margin-bottom: 10px; }
+    .scan-row input {
+      flex: 1; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 7px;
+      font-size: .78rem; font-family: Consolas, monospace;
+    }
+    .scan-row button {
+      background: var(--azul); color: white; border: 0; border-radius: 7px;
+      padding: 8px 14px; cursor: pointer; font-size: .78rem; white-space: nowrap;
+    }
+    .metodo-pago { display: flex; gap: 10px; margin-top: 12px; align-items: center; }
+    .metodo-pago select { padding: 7px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: .78rem; }
+    .total-line { font-size: .95rem; color: #111827; }
+
+    /* Ticket */
+    .ticket {
+      background: white; border: 1px dashed #94a3b8; border-radius: 6px;
+      font-family: Consolas, monospace; font-size: .78rem;
+      max-width: 300px; margin: 10px auto; padding: 14px;
+    }
+    .ticket .t-header { text-align: center; font-weight: 700; }
+    .ticket hr { border: 0; border-top: 1px dashed #cbd5e1; margin: 8px 0; }
+    .ticket .t-linea { display: flex; justify-content: space-between; font-size: .72rem; padding: 1px 0; }
+    .ticket .t-total { display: flex; justify-content: space-between; font-size: .85rem; font-weight: 700; }
+
+    /* Dashboard */
+    .dash-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+    .dash-card {
+      background: white; border-radius: 8px; padding: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .dash-card .d-label { font-size: .68rem; color: var(--gris); }
+    .dash-card .d-value { font-size: 1.15rem; font-weight: 800; color: #111827; }
+    .dash-card .d-sub { font-size: .68rem; color: var(--gris); }
+    .dash-card .d-value.small-v { font-size: .85rem; }
+
+    .nota-demo {
+      text-align: center; margin-top: 26px; color: var(--gris);
+      font-size: .82rem; max-width: 720px; margin-left: auto; margin-right: auto;
+    }
+    .nota-real {
+      display: inline-block; background: white; border: 1px solid #bfdbfe;
+      color: var(--azul-oscuro); padding: 8px 18px; border-radius: 20px;
+      font-size: .8rem; margin-bottom: 14px;
+    }
+
     @media (max-width: 720px) {
-      .dispositivos, .features, .demo-pass ol, .fases { grid-template-columns: 1fr !important; }
+      .dispositivos, .features, .fases { grid-template-columns: 1fr !important; }
       header h1 { font-size: 1.6rem; }
       table.comparativa { font-size: .85rem; }
       table.comparativa th, table.comparativa td { padding: 10px; }
+      .mesas-grid { grid-template-columns: repeat(2, 1fr); }
+      .dash-cards { grid-template-columns: 1fr 1fr; }
+      .marco-laptop { width: 100%; border-width: 6px; }
+      .marco-base { display: none; }
+      .marco-tablet { margin: 0 auto; }
     }
   </style>
 </head>
@@ -149,7 +327,10 @@
     <div class="container">
       <span class="badge-demo">✅ Prototipo funcional — probado en red local</span>
       <h1>Sistema POS para Negocio Local</h1>
-      <p class="sub">Punto de venta completo que funciona con los equipos que tu negocio <strong>ya tiene</strong>: laptop, tablet y celular. Sin nube, sin mensualidades, sin hardware nuevo.</p>
+      <p class="sub">Punto de venta que funciona con una Mini PC como servidor, y el cajero y mesero con <strong>laptop, tablet o celular</strong>. Sin nube, sin mensualidades.</p>
+      <button class="btn-hero" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">
+        ▶ Ver la demo del sistema
+      </button>
     </div>
   </header>
 
@@ -172,21 +353,21 @@
       <h2>La solución usa <span>lo que ya tienes</span></h2>
       <div class="dispositivos">
         <div class="card">
-          <div class="icono">💻</div>
-          <div class="rol">Laptop del negocio</div>
-          <div class="desc">Servidor + base de datos</div>
+          <div class="icono">🖥️</div>
+          <div class="rol">Mini PC (servidor)</div>
+          <div class="desc">Corre el sistema y guarda los datos. Siempre encendida en el mostrador.</div>
+          <div class="costo">Equipo único de la instalación</div>
+        </div>
+        <div class="card">
+          <div class="icono">💻 / 📱</div>
+          <div class="rol">Cajero — laptop o tablet</div>
+          <div class="desc">Cobra ventas de mostrador y pedidos de mesa. Emite los tickets.</div>
           <div class="costo">Costo extra: ninguno</div>
         </div>
         <div class="card">
-          <div class="icono">📱</div>
-          <div class="rol">Tablet del mesero</div>
-          <div class="desc">Toma pedidos de mesas</div>
-          <div class="costo">Costo extra: ninguno</div>
-        </div>
-        <div class="card">
-          <div class="icono">📲</div>
-          <div class="rol">Celular del cajero</div>
-          <div class="desc">Cobra y emite tickets</div>
+          <div class="icono">📲 / 📟</div>
+          <div class="rol">Mesero — tablet o celular</div>
+          <div class="desc">Toma pedidos en las mesas y avisa a caja. No ve montos.</div>
           <div class="costo">Costo extra: ninguno</div>
         </div>
       </div>
@@ -195,7 +376,7 @@
 
   <section class="problema">
     <div class="container">
-      <h2>Lo que el prototipo <span>ya hace hoy</span></h2>
+      <h2>Lo que el sistema <span>ya hace hoy</span></h2>
       <div class="features">
         <div class="feature-card">
           <h3>👥 4 roles con permisos</h3>
@@ -211,7 +392,7 @@
         </div>
         <div class="feature-card">
           <h3>🍽️ Pedidos de mesa</h3>
-          <p>El mesero envía el pedido a caja desde la tablet. El cajero lo cobra desde su celular y la mesa se libera sola.</p>
+          <p>El mesero envía el pedido a caja desde su dispositivo. El cajero lo cobra y la mesa se libera sola.</p>
         </div>
         <div class="feature-card">
           <h3>📊 Dashboard del dueño</h3>
@@ -219,21 +400,74 @@
         </div>
         <div class="feature-card">
           <h3>🌐 Multi-dispositivo real</h3>
-          <p>Tablet y celular entran por navegador a la red local del negocio. Probado flujo completo.</p>
+          <p>Todo por la red local del negocio, desde el navegador. Probado flujo completo de punta a punta.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="demo-pass">
-    <div class="container">
-      <h2>La demo que gana clientes (10 min en vivo)</h2>
-      <ol>
-        <li>Laptop como dueño: dashboard e inventario.</li>
-        <li>Tablet como mesero: pedido en mesa → "enviar a caja".</li>
-        <li>Celular como cajero: llega la notificación → cobro → ticket.</li>
-        <li>El dashboard ya refleja la venta y el stock descontado.</li>
-      </ol>
+  <!-- ============ DEMO INTERACTIVA ============ -->
+  <section id="demo">
+    <div class="container demo-wrap">
+      <h2 style="text-align:center; font-size:1.7rem; margin-bottom:8px;">Pruébalo tú mismo <span>(demo interactiva)</span></h2>
+      <p class="demo-aviso">
+        Esta es una <strong>muestra del sistema</strong> con datos de ejemplo: crea tu usuario,
+        entra como mesero o cajero y recorre el flujo real <em>mesa → pedido → cobro → ticket</em>.
+        Es una demostración: los datos son simulados, la sensación es la del sistema real.
+      </p>
+
+      <div style="text-align:center;">
+        <span class="nota-real">🧪 Demo con datos de muestra — no es la versión final</span>
+      </div>
+
+      <!-- Pantalla de registro -->
+      <div id="pantalla-registro" class="demo-portada">
+        <h3>Crea tu cuenta de prueba</h3>
+        <p>Elige el rol con el que quieres explorar el sistema. Tu cuenta queda guardada en este navegador.</p>
+        <div class="registro-box">
+          <label>Tu nombre</label>
+          <input type="text" id="reg-nombre" placeholder="ej. Carlos (para ver tu nombre en pantalla)">
+          <label>Contraseña</label>
+          <input type="password" id="reg-pass" placeholder="cualquier contraseña — es una demo">
+          <label>Rol para explorar</label>
+          <select id="reg-rol">
+            <option value="mesero">Mesero — tomar pedidos en mesas (tablet / celular)</option>
+            <option value="cajero">Cajero — cobrar y emitir tickets (laptop / tablet)</option>
+          </select>
+          <button class="btn-reg" onclick="entrarDemo()">Entrar a la demo ▶</button>
+          <div class="demo-hint">💡 Flow recomendado: entra como <strong>mesero</strong>, toma un pedido, luego regresa y entra como <strong>cajero</strong> para cobrarlo.</div>
+        </div>
+      </div>
+
+      <!-- Escena con dispositivos -->
+      <div id="escena-dispositivos" class="escena" style="display:none;">
+        <!-- Vista mesero (tablet) -->
+        <div id="disp-mesero" style="display:none;">
+          <div class="dispositivo">
+            <div class="tablet-disp">
+              <div class="marco-tablet">
+                <div class="pantalla" id="pantalla-mesero"></div>
+              </div>
+            </div>
+            <div class="dispositivo-sub" style="margin-top:10px; color:var(--gris); font-size:.8rem;">Así lo ve el mesero en su tablet o celular</div>
+          </div>
+        </div>
+
+        <!-- Vista cajero (laptop) -->
+        <div id="disp-cajero" style="display:none;">
+          <div class="dispositivo">
+            <div class="marco-laptop">
+              <div class="pantalla" id="pantalla-cajero"></div>
+            </div>
+            <div class="marco-base"></div>
+          </div>
+          <div class="dispositivo-sub" style="text-align:center; margin-top:10px; color:var(--gris); font-size:.8rem;">Así lo ve el cajero en su laptop o tablet</div>
+        </div>
+      </div>
+
+      <div class="nota">
+        <p><strong>Esto es solo la vista inicial.</strong> En el sistema instalado, cada rol entra con su usuario y contraseña, los pedidos viajan entre dispositivos en tiempo real por la red del negocio, y el dueño ve las ventas reflejadas en su dashboard.</p>
+      </div>
     </div>
   </section>
 
@@ -244,9 +478,9 @@
         <tr><th>Sistema POS comercial</th><th>Este sistema</th></tr>
         <tr><td>Mensualidad por suscripción</td><td>Pago único por desarrollo</td></tr>
         <tr><td>Depende de internet externo</td><td>Funciona sin internet (red local)</td></tr>
-        <tr><td>Hardware propietario</td><td>Celulares y tablets que ya tienen</td></tr>
+        <tr><td>Hardware propietario</td><td>Laptop, tablet o celular que ya tienen</td></tr>
         <tr><td>Licencia por dispositivo</td><td>Dispositivos ilimitados en la red</td></tr>
-        <tr><td>Datos en servidores de terceros</td><td>Datos en la laptop del negocio</td></tr>
+        <tr><td>Datos en servidores de terceros</td><td>Datos en la Mini PC del negocio</td></tr>
       </table>
     </div>
   </section>
@@ -301,6 +535,323 @@
     <p>Desarrollado por <strong>Ariel Rengifo</strong> · Python + Flask + SQLite</p>
     <p><a href="https://github.com/ariel-rengifo">github.com/ariel-rengifo</a></p>
   </footer>
+
+  <script>
+    /* ==================== DEMO INTERACTIVA ==================== */
+    var CAT = [
+      { id: 1, nombre: "Coca-Cola 600ml", precio: 25, cat: "Bebidas", stock: 50,  cod: "7501234567890" },
+      { id: 2, nombre: "Sprite 600ml",    precio: 25, cat: "Bebidas", stock: 40,  cod: "7501234567891" },
+      { id: 3, nombre: "Agua Ciel 1L",    precio: 15, cat: "Bebidas", stock: 60,  cod: "7501234567892" },
+      { id: 4, nombre: "Cerveza Tecate",  precio: 22, cat: "Bebidas", stock: 35,  cod: "7501234567893" },
+      { id: 5, nombre: "Sabritas Orig.",  precio: 18, cat: "Botana",  stock: 45,  cod: "7501234567894" },
+      { id: 6, nombre: "Cacahuates",      precio: 15, cat: "Botana",  stock: 30,  cod: "7501234567896" },
+      { id: 7, nombre: "Gansito",         precio: 10, cat: "Dulces",  stock: 50,  cod: "7501234567897" },
+      { id: 8, nombre: "Tortillas 1kg",   precio: 24, cat: "Abarrotes", stock: 30, cod: "7501234567902" }
+    ];
+    var MESAS = [1,2,3,4,5,6];
+
+    /* estado */
+    var D = {
+      usuario: null, rol: null,
+      mesas: {},           // numero -> {estado: libre|enviada, pedido: [...]}
+      caja: [],            // pedidos enviados a caja
+      ventas: [],          // {id, total, metodo, items}
+      folio: 0,
+      stock: {},           // id -> stock
+      carrito: []          // mostrarador [ {id, cant} ]
+    };
+    CAT.forEach(function(p){ D.stock[p.id] = p.stock; });
+
+    function prod(id){ return CAT.filter(function(p){return p.id===id;})[0]; }
+    function estadoMesa(n){ return D.mesas[n] ? D.mesas[n].estado : "libre"; }
+    function totalMesa(n){
+      var m = D.mesas[n]; if(!m) return 0;
+      return m.pedido.reduce(function(t, it){ return t + prod(it.id).precio * it.cant; }, 0);
+    }
+    function totalCarrito(){
+      return D.carrito.reduce(function(t,it){ return t + prod(it.id).precio * it.cant; }, 0);
+    }
+
+    function flashMsg(msg, ok) {
+      return '<div class="app-flash ' + (ok ? 'ok' : '') + '">' + msg + '</div>';
+    }
+
+    /* ---------- flujo de entrada ---------- */
+    function entrarDemo() {
+      var nombre = document.getElementById("reg-nombre").value.trim() || "Cliente Demo";
+      var pass = document.getElementById("reg-pass").value;
+      var rol = document.getElementById("reg-rol").value;
+      localStorage.setItem("pos-demo-cuenta", JSON.stringify({ nombre: nombre, rol: rol }));
+      D.usuario = nombre; D.rol = rol;
+      document.getElementById("pantalla-registro").style.display = "none";
+      document.getElementById("escena-dispositivos").style.display = "flex";
+      document.getElementById("disp-mesero").style.display  = rol === "mesero" ? "block" : "none";
+      document.getElementById("disp-cajero").style.display  = rol === "cajero" ? "block" : "none";
+      render();
+    }
+
+    function salirDemo() {
+      D.usuario = null; D.rol = null;
+      document.getElementById("escena-dispositivos").style.display = "none";
+      document.getElementById("pantalla-registro").style.display = "block";
+    }
+
+    /* ---------- render mesero ---------- */
+    function render() {
+      if (D.rol === "mesero") renderMesero();
+      if (D.rol === "cajero") renderCajero();
+    }
+
+    function renderMesero(vista) {
+      vista = vista || "mesas";
+      var html = topbar("Mesero", "Tablet del salón", true);
+      if (vista === "mesas") {
+        html += '<div class="app-body">';
+        html += '<h4>Mesas del salón</h4><div class="mesas-grid">';
+        MESAS.forEach(function (n) {
+          var e = estadoMesa(n);
+          var cls = e === "libre" ? "libre" : "enviada";
+          var txt = e === "libre" ? "Libre — tocar para pedir" : "Pedido enviado a caja";
+          html += '<button class="mesa ' + cls + ' mesa-b" data-mesa="' + n + '"' + (e !== "libre" ? " disabled" : "") + '>' +
+                  'Mesa ' + n + '<small>' + txt + '</small></button>';
+        });
+        html += '</div>';
+        html += '<h5>Pedidos a caja: ' + D.caja.length + '</h5>';
+        html += '<div class="nota"><p style="font-size:.75rem; color:#475569;">Al tocar una mesa libre, el sistema abre el pedido para esa mesa.</p></div>';
+        html += '</div>';
+      }
+      else if (vista === "pedido") {
+        var m = D.mesas[D.mesaActual];
+        var total = totalMesa(D.mesaActual);
+        html += '<div class="app-body">';
+        html += '<button class="btn-volver" onclick="renderMesero(\'mesas\')">← Mesas</button>';
+        html += '<h4>Pedido — Mesa ' + D.mesaActual + '</h4>';
+        html += '<h5>¿Qué lleva?</h5><div class="catalogo">';
+        CAT.forEach(function (p) {
+          if (p.stock <= 0) return;
+          html += '<button class="prod-btn add-ped" data-add-ped="' + p.id + '"><strong>' + p.nombre + '</strong><br>' +
+                  '<span class="precio">$' + p.precio.toFixed(2) + '</span></button>';
+        });
+        html += '</div><h5>Pedido actual</h5>';
+        if (m && m.pedido.length) {
+          html += '<div class="pedido-actual">';
+          m.pedido.forEach(function (it, i) {
+            html += '<div class="pedido-linea"><span>' + it.cant + ' × ' + prod(it.id).nombre + '</span>' + '<span>$' + (prod(it.id).precio * it.cant).toFixed(2) +
+                    ' <button class="btn-min" data-quitaped="' + i + '">✕</button></span></div>';
+          });
+          html += '</div>';
+        } else {
+          html += '<div class="nota"><em>Aún no has agregado nada.</em></div>';
+        }
+        html += '<button class="btn-enviar" data-enviar="' + D.mesaActual + '"' + (m && m.pedido.length ? '' : ' disabled') + '>';
+        html += '📤 Enviar a caja — Mesa ' + D.mesaActual + ' ($' + total.toFixed(2) + ')</button>';
+        html += '</div>';
+      }
+      document.getElementById("pantalla-mesero").innerHTML = html;
+      bind();
+    }
+
+    /* ---------- render cajero ---------- */
+    function renderCajero(vista) {
+      vista = vista || "inicio";
+      var html = topbar("Caja", "Laptop del cajero", true);
+      if (vista === "inicio") {
+        html += '<div class="app-body">';
+        html += '<div class="dash-cards">';
+        html += '<div class="dash-card"><div class="d-label">Ventas de hoy</div><div class="d-value" id="v-hoy">$' + sum() + '</div><div class="d-sub" id="n-hoy">' + D.ventas.length + ' tickets</div></div>';
+        html += '<div class="dash-card"><div class="d-label">Pedidos en espera</div><div class="d-value" id="v-pend">' + D.caja.length + '</div><div class="d-sub">de mesas del salón</div></div>';
+        html += '<div class="dash-card"><div class="d-label">Última venta</div><div class="d-value" id="v-ult">' + (D.ventas.length ? '$' + D.ventas[D.ventas.length-1].total.toFixed(2) : '—') + '</div><div class="d-sub" id="v-ult2">' + (D.ventas.length ? 'folio #' + D.ventas[D.ventas.length-1].id : 'aún sin ventas') + '</div></div>';
+        html += '</div>';
+        html += '<button class="btn-tabla verde" data-vista="mostrador">＋ Venta de mostrador (escanear)</button>';
+        html += '<h5>Notificaciones de mesas</h5>';
+        if (D.caja.length === 0) html += '<table class="app-tabla"><tr><td>Sin pedidos pendientes. Entra como mesero en otra ventana y envía uno 😉</td></tr></table>';
+        else {
+          html += '<table class="app-tabla"><tr><th>Mesa</th><th>Items</th><th>Total</th><th></th></tr>';
+          D.caja.forEach(function (p, i) {
+            html += '<tr><td>Mesa ' + p.mesa + '</td><td>' + p.items + '</td><td>$' + p.total.toFixed(2) + '</td>' +
+                    '<td><button class="btn-tabla verde" data-cobrar="' + p.id + '">Cobrar</button></td></tr>';
+          });
+          html += '</table>';
+        }
+        var st = '<h5>Stock de productos (automático)</h5><table class="app-tabla"><tr><th>Producto</th><th>Stock</th></tr>';
+        CAT.forEach(function(p){ st += '<tr><td>' + p.nombre + '</td><td>' + D.stock[p.id] + '</td></tr>'; });
+        html += st + '</table></div>';
+      }
+      else if (vista === "mostrador") {
+        html += renderMostrador();
+      }
+      else if (vista === "cobrar") {
+        var p = D.caja.filter(function(x){ return x.id === D.cobrarId; })[0];
+        if (!p) { renderCajero("inicio"); return; }
+        html += '<div class="app-body">';
+        html += '<button class="btn-volver" onclick="renderCajero(\'inicio\')">← Caja</button>';
+        html += '<h4>Cobrar Mesa ' + p.mesa + '</h4>';
+        html += '<table class="app-tabla"><tr><th>Producto</th><th>Cant</th><th>Sub</th></tr>';
+        p.detalle.forEach(function (it) {
+          html += '<tr><td>' + prod(it.id).nombre + '</td><td>' + it.cant + '</td><td>$' + (prod(it.id).precio*it.cant).toFixed(2) + '</td></tr>';
+        });
+        html += '<tr><td colspan="2"><strong>TOTAL</strong></td><td><strong>$' + p.total.toFixed(2) + '</strong></td></tr></table>';
+        html += '<div style="margin-top:12px;"><button class="btn-enviar" data-confirmar="' + p.id + '">✅ Confirmar cobro y emitir ticket</button></div>';
+        html += '</div>';
+      }
+      else if (vista === "ticket") {
+        var v = D.ventas[D.ventas.length-1];
+        if (!v) { renderCajero("inicio"); return; }
+        html += '<div class="app-body">';
+        html += ticketHTML(v);
+        html += '<div style="text-align:center; margin-top:8px;"><button class="btn-tabla" data-vista="inicio">← Volver a caja</button></div>';
+        html += '</div>';
+      }
+      document.getElementById("pantalla-cajero").innerHTML = html;
+      bind();
+    }
+
+    function renderMostrador() {
+      var html = '<div class="app-body">';
+      html += '<button class="btn-volver" onclick="renderCajero(\'inicio\')">← Caja</button>';
+      html += '<h4>Venta de mostrador</h4>';
+      html += '<div class="scan-row"><input id="scan-input" placeholder="Escribe el código, ej. 7501234567890"><button id="scan-btn">⌁ Agregar</button></div>';
+      if (D.carrito.length === 0) {
+        html += '<div class="nota"><em style="font-size:.78rem; color:#94a3b8;">Carrito vacío. Escribe un código de arriba y agrégalo.</em></div>';
+      }
+      D.carrito.forEach(function (it, i) {
+        html += '<div class="pedido-linea">' + it.cant + ' × ' +
+                prod(it.id).nombre + '<span>$' + (prod(it.id).precio*it.cant).toFixed(2) +
+                ' <button class="btn-min" data-quitacar="' + i + '">✕</button></span></div>';
+      });
+      html += '<div class="metodo-pago">';
+      html += '<span class="d-label" style="font-size:.78rem; color:var(--gris);">Total carrito: <strong>$' + totalCarrito().toFixed(2) + '</strong></span>';
+      html += '<select id="mp"><option value="Efectivo">Efectivo</option><option value="Tarjeta">Tarjeta</option></select>';
+      html += '<button class="btn-tabla verde" id="cobrar-mostrador" style="margin-left:auto;">💰 Cobrar</button>';
+      html += '</div><div class="nota"><p style="font-size:.72rem; color:#94a3b8;">Códigos de prueba: ' +
+              CAT.slice(0,3).map(function(p){ return p.cod + " (" + p.nombre + ")"; }).join(" · ") + '</p></div>';
+      html += '</div>';
+      return html;
+    }
+
+    function sum(){ return D.ventas.reduce(function(t,v){ return t + v.total; }, 0); }
+
+    function ticketHTML(v) {
+      var html = '<div class="ticket">';
+      html += '<div class="t-header">NEGOCIO LOCAL<br><span style="font-size:.65rem; font-weight:400;">simulación de ticketera</span></div><hr>';
+      html += '<div style="font-size:.72rem;">Folio: #' + v.id + '<br>Fecha: ' + v.fecha + '<br>Método: ' + v.metodo + '</div><hr>';
+      v.items.forEach(function (it) {
+        html += '<div class="t-linea"><span>' + it.cant + ' × ' + it.nombre + '</span><span>$' + (it.precio*it.cant).toFixed(2) + '</span></div>';
+      });
+      html += '<hr><div class="t-total"><span>TOTAL</span><span>$' + v.total.toFixed(2) + '</span></div><hr>';
+      html += '<div class="t-footer" style="text-align:center; font-size:.65rem; color:#94a3b8;">Gracias por su compra</div></div>';
+      return html;
+    }
+
+    /* ---------- topbar ---------- */
+    function topbar(nombre, dispositivo, mostrarSalir) {
+      return '<div class="app-topbar"><span class="app-brand">POS</span>' +
+             '<span class="app-who">' + nombre + ' · ' + dispositivo + '</span>' +
+             (mostrarSalir ? '<button class="app-salir" onclick="salirDemo()">Salir</button>' : '') + '</div>';
+    }
+
+    /* ---------- eventos generales ---------- */
+    function bind() {
+      var els;
+      if (D.rol === "mesero") {
+        els = document.querySelectorAll(".mesa-b");
+        els.forEach(function (el) { el.onclick = function () { D.mesaActual = el.dataset.mesa; renderMesero("pedido"); }; });
+        els = document.querySelectorAll(".add-ped");
+        els.forEach(function (el) { el.onclick = function () { agregarPedido(parseInt(el.dataset.addPed)); }; });
+        els = document.querySelectorAll("[data-quitaped]");
+        els.forEach(function (el) { el.onclick = function () { quitarPedido(parseInt(el.dataset.quitaped)); }; });
+        els = document.querySelectorAll("[data-enviar]");
+        els.forEach(function (el) { el.onclick = function () { enviarPedido(parseInt(el.dataset.enviar)); }; });
+      }
+      if (D.rol === "cajero") {
+        els = document.querySelectorAll("[data-vista]");
+        els.forEach(function (el) { el.onclick = function () { renderCajero(el.dataset.vista); }; });
+        els = document.querySelectorAll("[data-cobrar]");
+        els.forEach(function (el) { el.onclick = function () { D.cobrarId = parseInt(el.dataset.cobrar); renderCajero("cobrar"); }; });
+        els = document.querySelectorAll("[data-confirmar]");
+        els.forEach(function (el) { el.onclick = function () { cobrarPedido(parseInt(el.dataset.confirmar)); }; });
+        els = document.querySelectorAll("[data-quitacar]");
+        els.forEach(function (el) { el.onclick = function () { D.carrito.splice(parseInt(el.dataset.quitacar),1); renderCajero("mostrador"); }; });
+        var s = document.getElementById("scan-btn");
+        if (s) s.onclick = escanear;
+        var cm = document.getElementById("cobrar-mostrador");
+        if (cm) cm.onclick = cobrarMostrador;
+      }
+    }
+
+    function agregarPedido(pid) {
+      var m = D.mesas[D.mesaActual];
+      if (!m) { D.mesas[D.mesaActual] = { estado: "ocupada", pedido: [] }; m = D.mesas[D.mesaActual]; }
+      var ex = m.pedido.filter(function(x){ return x.id === pid; })[0];
+      if (ex) ex.cant++;
+      else m.pedido.push({ id: pid, cant: 1 });
+      renderMesero("pedido");
+    }
+
+    function quitarPedido(idx) {
+      var m = D.mesas[D.mesaActual];
+      m.pedido.splice(idx, 1);
+      if (!m.pedido.length) delete D.mesas[D.mesaActual];
+      renderMesero("pedido");
+    }
+
+    function enviarPedido(mesa) {
+      var m = D.mesas[mesa];
+      if (!m || !m.pedido.length) return;
+      var total = totalMesa(mesa);
+      D.caja.push({
+        id: ++D.folio, mesa: mesa, items: m.pedido.length,
+        detalle: m.pedido.slice(), total: total
+      });
+      m.estado = "enviada";
+      renderMesero("mesas");
+    }
+
+    function escanear() {
+      var inp = document.getElementById("scan-input");
+      var c = inp.value.trim();
+      var p = CAT.filter(function(x){ return x.cod === c || String(x.id) === c; })[0];
+      if (p) {
+        var ex = D.carrito.filter(function(x){ return x.id === p.id; })[0];
+        if (ex) ex.cant++;
+        else D.carrito.push({ id: p.id, cant: 1 });
+        inp.value = "";
+      } else {
+        inp.value = "";
+        inp.placeholder = "Código no encontrado, prueba otro";
+      }
+      renderCajero("mostrador");
+    }
+
+    function cobrarMostrador() {
+      if (!D.carrito.length) return;
+      D.folio++;
+      var mp = document.getElementById("mp").value;
+      var items = D.carrito.map(function(x){
+        return { nombre: prod(x.id).nombre, cant: x.cant, precio: prod(x.id).precio };
+      });
+      var v = { id: D.folio, fecha: new Date().toLocaleTimeString(), metodo: mp, items: items, total: totalCarrito() };
+      D.carrito.forEach(function(x){ D.stock[x.id] -= x.cant; });
+      D.ventas.push(v);
+      D.carrito = [];
+      renderCajero("ticket");
+    }
+
+    function cobrarPedido(id) {
+      var p = D.caja.filter(function(x){ return x.id === id; })[0];
+      if (!p) return;
+      var mp = "Efectivo";
+      p.detalle.forEach(function(x){ D.stock[x.id] -= x.cant; });
+      D.folio++;
+      var v = { id: D.folio, fecha: new Date().toLocaleTimeString(), metodo: mp,
+                items: p.detalle.map(function(x){ return { nombre: prod(x.id).nombre, cant: x.cant, precio: prod(x.id).precio }; }),
+                total: p.total, mesa: p.mesa };
+      D.ventas.push(v);
+      D.caja = D.caja.filter(function(x){ return x.id !== p.id; });
+      delete D.mesas[p.mesa];
+      renderCajero("ticket");
+    }
+  </script>
 
 </body>
 </html>
