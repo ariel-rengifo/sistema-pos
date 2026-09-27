@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema POS para Negocio Local | Ariel Rengifo</title>
+  <meta name="description" content="Prototipo funcional de un sistema de punto de venta para negocios pequeños: laptop, tablet y celular conectados por red local. Sin nube, sin mensualidades.">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --azul: #2563eb;
+      --azul-oscuro: #1e3a8a;
+      --gris: #64748b;
+      --fondo: #f8fafc;
+      --verde: #16a34a;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: var(--fondo);
+      color: #1e293b;
+      line-height: 1.6;
+    }
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+    header {
+      background: linear-gradient(135deg, var(--azul-oscuro), var(--azul));
+      color: white;
+      padding: 70px 0 60px;
+      text-align: center;
+    }
+    header h1 { font-size: 2.4rem; margin-bottom: 12px; }
+    header p.sub { font-size: 1.15rem; opacity: .92; max-width: 700px; margin: 0 auto 25px; }
+    .badge-demo {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.4);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: .9rem;
+    }
+
+    section { padding: 55px 0; }
+    section h2 { font-size: 1.7rem; margin-bottom: 28px; text-align: center; }
+    section h2 span { color: var(--azul); }
+
+    .problema { background: white; }
+    .problema ul { max-width: 640px; margin: 0 auto; list-style: none; }
+    .problema li { padding: 9px 0 9px 32px; position: relative; border-bottom: 1px dashed #e2e8f0; }
+    .problema li::before { content: "✗"; position: absolute; left: 4px; color: #dc2626; font-weight: bold; }
+    .problema .cierre {
+      text-align: center; margin-top: 22px;
+      font-size: 1.1rem; font-weight: 600; color: #b91c1c;
+    }
+
+    .dispositivos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 28px; }
+    .dispositivos .card {
+      background: white; border-radius: 12px; padding: 26px;
+      text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    }
+    .dispositivos .icono { font-size: 44px; }
+    .dispositivos .rol { font-weight: 700; margin: 8px 0 4px; }
+    .dispositivos .desc { color: var(--gris); font-size: .9rem; }
+    .dispositivos .costo { color: var(--verde); font-size: .85rem; font-weight: 600; margin-top: 8px; }
+
+    .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .feature-card {
+      background: white; border-radius: 10px; padding: 20px;
+      border-left: 4px solid var(--azul);
+      box-shadow: 0 1px 6px rgba(0,0,0,.06);
+    }
+    .feature-card h3 { font-size: 1.05rem; margin-bottom: 6px; }
+    .feature-card p { color: #475569; font-size: .95rem; }
+
+    .demo-pass { background: var(--azul-oscuro); color: white; }
+    .demo-pass ol {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 14px; max-width: 950px; margin: 25px auto 0;
+      list-style: none; counter-reset: paso;
+    }
+    .demo-pass li {
+      counter-increment: paso;
+      background: rgba(255,255,255,.1);
+      border-radius: 10px; padding: 40px 14px 18px;
+      font-size: .9rem; position: relative;
+    }
+    .demo-pass li::before {
+      content: counter(paso);
+      position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      background: var(--verde); color: white;
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: .85rem;
+    }
+
+    table.comparativa {
+      width: 100%; border-collapse: collapse;
+      background: white; border-radius: 10px; overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    }
+    table.comparativa th, table.comparativa td {
+      padding: 13px 18px; text-align: left; border-bottom: 1px solid #e2e8f0;
+    }
+    table.comparativa th { background: var(--azul-oscuro); color: white; font-size: .95rem; }
+    table.comparativa tr:nth-child(even) { background: #f8fafc; }
+    table.comparativa td:first-child { color: var(--gris); }
+    table.comparativa td:last-child { font-weight: 600; color: var(--azul); }
+
+    .fases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+    .fase {
+      background: white; border-radius: 10px; padding: 22px;
+      box-shadow: 0 1px 6px rgba(0,0,0,.06);
+      border-top: 4px solid var(--verde);
+    }
+    .fase h3 { font-size: 1rem; margin-bottom: 8px; }
+    .fase ul { padding-left: 18px; color: #475569; font-size: .88rem; }
+    .fase li { margin-bottom: 5px; }
+
+    .cta { background: white; text-align: center; }
+    .cta .btn {
+      display: inline-block; margin-top: 20px;
+      background: var(--azul); color: white;
+      text-decoration: none; padding: 15px 34px;
+      border-radius: 8px; font-size: 1.05rem; font-weight: 600;
+      box-shadow: 0 3px 12px rgba(37,99,235,.35);
+      transition: transform .15s;
+    }
+    .cta .btn:hover { transform: translateY(-2px); }
+
+    .final {
+      background: linear-gradient(135deg, var(--azul), var(--azul-oscuro));
+      color: white; text-align: center; padding: 45px 20px;
+    }
+    .final .frase { font-size: 1.45rem; font-weight: 700; }
+
+    footer { text-align: center; padding: 28px 0; color: #94a3b8; font-size: .85rem; }
+    footer a { color: var(--azul); }
+
+    @media (max-width: 720px) {
+      .dispositivos, .features, .demo-pass ol, .fases { grid-template-columns: 1fr !important; }
+      header h1 { font-size: 1.6rem; }
+      table.comparativa { font-size: .85rem; }
+      table.comparativa th, table.comparativa td { padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <span class="badge-demo">✅ Prototipo funcional — probado en red local</span>
+      <h1>Sistema POS para Negocio Local</h1>
+      <p class="sub">Punto de venta completo que funciona con los equipos que tu negocio <strong>ya tiene</strong>: laptop, tablet y celular. Sin nube, sin mensualidades, sin hardware nuevo.</p>
+    </div>
+  </header>
+
+  <section class="problema">
+    <div class="container">
+      <h2>El problema de todo negocio pequeño</h2>
+      <ul>
+        <li>Tickets de papel y cálculos a mano</li>
+        <li>Inventario contado "de memoria" o en un cuaderno</li>
+        <li>Sin registro de qué se vende, cuándo y cuánto</li>
+        <li>Errores de cobro difíciles de detectar</li>
+        <li>POS comerciales: suscripción mensual + hardware caro</li>
+      </ul>
+      <p class="cierre">Resultado: el dueño no tiene control real de su negocio.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>La solución usa <span>lo que ya tienes</span></h2>
+      <div class="dispositivos">
+        <div class="card">
+          <div class="icono">💻</div>
+          <div class="rol">Laptop del negocio</div>
+          <div class="desc">Servidor + base de datos</div>
+          <div class="costo">Costo extra: ninguno</div>
+        </div>
+        <div class="card">
+          <div class="icono">📱</div>
+          <div class="rol">Tablet del mesero</div>
+          <div class="desc">Toma pedidos de mesas</div>
+          <div class="costo">Costo extra: ninguno</div>
+        </div>
+        <div class="card">
+          <div class="icono">📲</div>
+          <div class="rol">Celular del cajero</div>
+          <div class="desc">Cobra y emite tickets</div>
+          <div class="costo">Costo extra: ninguno</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="problema">
+    <div class="container">
+      <h2>Lo que el prototipo <span>ya hace hoy</span></h2>
+      <div class="features">
+        <div class="feature-card">
+          <h3>👥 4 roles con permisos</h3>
+          <p>Dueño, administrador, cajero y mesero: cada uno ve solo lo suyo. El mesero no ve montos; el cajero no toca el inventario.</p>
+        </div>
+        <div class="feature-card">
+          <h3>📦 Inventario con código de barras</h3>
+          <p>Alta de productos, reposición por lote y alertas de stock bajo. El lector físico se conecta directo.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🛒 Venta de mostrador</h3>
+          <p>Escaneo → carrito → cobro → ticket en pantalla. El stock se descuenta solo.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🍽️ Pedidos de mesa</h3>
+          <p>El mesero envía el pedido a caja desde la tablet. El cajero lo cobra desde su celular y la mesa se libera sola.</p>
+        </div>
+        <div class="feature-card">
+          <h3>📊 Dashboard del dueño</h3>
+          <p>Ventas del día y la semana, producto más vendido y stock bajo, en una sola pantalla.</p>
+        </div>
+        <div class="feature-card">
+          <h3>🌐 Multi-dispositivo real</h3>
+          <p>Tablet y celular entran por navegador a la red local del negocio. Probado flujo completo.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-pass">
+    <div class="container">
+      <h2>La demo que gana clientes (10 min en vivo)</h2>
+      <ol>
+        <li>Laptop como dueño: dashboard e inventario.</li>
+        <li>Tablet como mesero: pedido en mesa → "enviar a caja".</li>
+        <li>Celular como cajero: llega la notificación → cobro → ticket.</li>
+        <li>El dashboard ya refleja la venta y el stock descontado.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <h2>POS comercial vs <span>este sistema</span></h2>
+      <table class="comparativa">
+        <tr><th>Sistema POS comercial</th><th>Este sistema</th></tr>
+        <tr><td>Mensualidad por suscripción</td><td>Pago único por desarrollo</td></tr>
+        <tr><td>Depende de internet externo</td><td>Funciona sin internet (red local)</td></tr>
+        <tr><td>Hardware propietario</td><td>Celulares y tablets que ya tienen</td></tr>
+        <tr><td>Licencia por dispositivo</td><td>Dispositivos ilimitados en la red</td></tr>
+        <tr><td>Datos en servidores de terceros</td><td>Datos en la laptop del negocio</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="problema">
+    <div class="container">
+      <h2>Ruta de desarrollo <span>por fases</span></h2>
+      <div class="fases">
+        <div class="fase">
+          <h3>Fase 1 — Base sólida</h3>
+          <ul>
+            <li>Ticketera térmica real</li>
+            <li>Lector USB real</li>
+            <li>Respaldo automático</li>
+            <li>Descuentos y devoluciones</li>
+          </ul>
+        </div>
+        <div class="fase">
+          <h3>Fase 2 — Control del negocio</h3>
+          <ul>
+            <li>Cortes de caja por turno</li>
+            <li>Reportes por día/producto</li>
+            <li>Horarios y comisiones</li>
+          </ul>
+        </div>
+        <div class="fase">
+          <h3>Fase 3 — Administración remota</h3>
+          <ul>
+            <li>Panel del dueño fuera del negocio</li>
+            <li>Notificaciones</li>
+            <li>Respaldo en la nube (opcional)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container">
+      <h2>Siguiente paso</h2>
+      <p>Prueba piloto gratuita de 1 semana en tu negocio, con tus productos y tus mesas. Sin compromiso.</p>
+      <a class="btn" href="mailto:tu-correo@ejemplo.com?subject=Interés en Sistema POS">Quiero mi piloto gratis</a>
+      <p style="margin-top:14px; color:var(--gris); font-size:.9rem;">O escríbeme directo: <strong>tu-correo@ejemplo.com</strong> · WhatsApp: <strong>tu número</strong></p>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="frase">"Su negocio ya tiene las computadoras. Póngalas a trabajar."</div>
+  </section>
+
+  <footer>
+    <p>Desarrollado por <strong>Ariel Rengifo</strong> · Python + Flask + SQLite</p>
+    <p><a href="https://github.com/ariel-rengifo">github.com/ariel-rengifo</a></p>
+  </footer>
+
+</body>
+</html>
